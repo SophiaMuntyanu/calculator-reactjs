@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <!--<link rel="stylesheet"  href="css/bootstrap.min.css">-->
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>  
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>  
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.6.0/math.js></script>
+    <title>Calculator</title>
+  </head>
+  <body>
+    <div id="root"></div>  
+    <script type="text/babel">  
+    
+     class App extends React.Component {
+        constructor(props){
+           super(props);
+
+           this.state = {
+              input: ""
+           };
+        }
+        
+        addToInput = val => {
+           this.setState({ input: this.state.input + val });
+        }
+        
+        handleEqual = () => {
+           this.setState({input: math.eval(this.state.input)});
+        }
+
+        render(){
+           return(
+              <div className="app">
+                 <div className="calc-wrapper">
+                 	  <Input input={this.state.input}></Input>
+                    <div className="row">
+                       <Button handleClick={this.addToInput}>7</Button>
+                       <Button handleClick={this.addToInput}>8</Button>
+                       <Button handleClick={this.addToInput}>9</Button>
+                       <Button handleClick={this.addToInput}>/</Button>
+                    </div>
+                    <div className="row">
+                       <Button handleClick={this.addToInput}>4</Button>
+                       <Button handleClick={this.addToInput}>5</Button>
+                       <Button handleClick={this.addToInput}>6</Button>
+                       <Button handleClick={this.addToInput}>*</Button>
+                    </div>
+                    <div className="row">
+                       <Button handleClick={this.addToInput}>1</Button>
+                       <Button handleClick={this.addToInput}>2</Button>
+                       <Button handleClick={this.addToInput}>3</Button>
+                       <Button handleClick={this.addToInput}>+</Button>
+                    </div>
+                    <div className="row">
+                       <Button handleClick={this.addToInput}>.</Button>
+                       <Button handleClick={this.addToInput}>0</Button>
+                       <Button handleClick={() => this.handleEqual()}>=</Button>
+                       <Button handleClick={this.addToInput}>-</Button>
+                    </div>
+                    <div className="row">
+                       <ClearButton handleClear={() => this.setState({input: ""})}>Clear</ClearButton>
+                    </div>
+                 </div>
+              </div>
+           )
+         }
+     }
+     //Components
+     const isOperator = val => {
+        return !isNaN(val) || val === "." || val === "=";
+     }
+
+     const Button = props => (
+        <div 
+           className = {`button-wrapper ${
+              isOperator(props.children) ? null : "operator"
+           }`}
+           onClick={() => props.handleClick(props.children)}
+        >
+           {props.children}
+        </div>
+     );
+
+     const Input = (props) => (
+        <div className = "input">{props.input}</div>
+     );
+     
+     const ClearButton = (props) => (
+        <div className = "clear-btn" onClick={props.handleClear}>
+           {props.children}
+        </div>
+     )
+
+       ReactDOM.render(
+          <App />,
+          document.getElementById("root")
+       );
+       
+    </script>    
+  </body>
+</html>
